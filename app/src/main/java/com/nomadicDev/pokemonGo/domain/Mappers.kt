@@ -80,35 +80,3 @@ fun PokemonEntity.toDomainModel(): Pokemon {
         level = this.level
     )
 }
-
-fun Attack.toFormattedString(): String {
-    return "${this.name} (${this.cost.joinToString(" ")}): ${this.damage} ${this.text}"
-}
-
-fun List<Attack>.toAttackFormattedString(): String {
-    return this.joinToString("\n") { it.toFormattedString() }
-}
-
-fun Weakness.toFormattedString(): String {
-    return "${this.type} (${this.value})"
-}
-
-fun List<Weakness>.toWeaknessFormattedString(): String {
-    return this.joinToString("\n") { it.toFormattedString() }
-}
-
-fun Resistance.toFormattedString(): String {
-    return "${this.type} (${this.value})"
-}
-
-fun List<Resistance>.toResistanceFormattedString(): String {
-    return this.joinToString("\n") { it.toFormattedString() }
-}
-
-fun Ability.toFormattedString(): String {
-    return "${this.name}: ${this.text}"
-}
-
-fun List<Ability>.toAbilityFormattedString(): String {
-    return this.joinToString("\n") { it.toFormattedString() }
-}

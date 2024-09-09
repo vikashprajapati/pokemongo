@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -20,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,11 +32,6 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.nomadicDev.pokemonGo.domain.model.Pokemon
-import com.nomadicDev.pokemonGo.domain.toAbilityFormattedString
-import com.nomadicDev.pokemonGo.domain.toAttackFormattedString
-import com.nomadicDev.pokemonGo.domain.toFormattedString
-import com.nomadicDev.pokemonGo.domain.toResistanceFormattedString
-import com.nomadicDev.pokemonGo.domain.toWeaknessFormattedString
 import com.nomadicDev.pokemonGo.presentation.components.ErrorView
 import com.nomadicDev.pokemonGo.presentation.components.LoadingIndicator
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +42,9 @@ fun PokemonDetailsScreen(
     viewModel: PokemonDetailsViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit
 ) {
-    viewModel.onEvent(PokemonDetailsEvent.GetPokemonDetails(pokemonId))
+    LaunchedEffect(key1 = Unit) {
+        viewModel.onEvent(PokemonDetailsEvent.GetPokemonDetails(pokemonId))
+    }
     val state by viewModel.pokemonDetails.collectAsState()
 
     when {
@@ -117,16 +114,16 @@ fun Details(pokemon: Pokemon) {
             DetailRow(label = "Types", value = pokemon.types?.joinToString(", ") ?: "N/A")
         }
         item {
-            DetailRow(label = "Abilities", value = pokemon.abilities?.joinToString("\n") { it.toFormattedString() } ?: "N/A")
+            DetailRow(label = "Abilities", value = pokemon.abilities?.joinToString("\n") {"${it.name}: ${it.text}" } ?: "N/A")
         }
         item {
-            DetailRow(label = "Attacks", value = pokemon.attacks.toAttackFormattedString())
+            DetailRow(label = "Attacks", value = pokemon.attacks.joinToString("\n") { "${it.name}: ${it.text}"  })
         }
         item {
-            DetailRow(label = "Weaknesses", value = pokemon.weaknesses?.joinToString("\n") { it.toFormattedString() } ?: "N/A")
+            DetailRow(label = "Weaknesses", value = pokemon.weaknesses?.joinToString("\n") { "${it.type}: ${it.value}"  } ?: "N/A")
         }
         item {
-            DetailRow(label = "Resistances", value = pokemon.resistances?.joinToString("\n") { it.toFormattedString() } ?:"N/A")
+            DetailRow(label = "Resistances", value = pokemon.resistances?.joinToString("\n") { "${it.type}: ${it.value}"  } ?:"N/A")
         }
     }
 }
